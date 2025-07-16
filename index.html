@@ -1,12 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title></title>
+    <title>Puppy Bowl</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css" />
     <script src="index.js" defer></script>
-  </head>
+</head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="container">
+        <h1>Puppy Bowl 2025</h1>
+        <form id="add-player">
+            <h2>Add New Player</h2>
+            <div class="form">
+                <label for="new-name">Name:</label>
+                <input type="text" id="new-name" name="name" placeholder="Enter puppy's name">
+            </div>
+            <div class="form">
+                <label for="new-breed">Breed:</label>
+                <input type="text" id="new-breed" name="breed" placeholder="Enter breed">
+            </div>
+            <div class="form">
+                <label for="new-image">Image URL:</label>
+                <input type="url" id="new-image" name="imageUrl" placeholder="Enter image URL">
+            </div>
+            <button type="submit">Add Player</button>
+        </form>
+        <div id="loading-screen">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+    <main id="content"></main>
   </body>
 </html>
