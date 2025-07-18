@@ -1,10 +1,13 @@
-const COHORT_CODE = "2505-ftb-ct-web-pt";
-
+const COHORT_CODE = "2505-ftb-ct-web-pt-jacob";
 const API_URL = "https://fsa-puppy-bowl.herokuapp.com/api/";
 const full_url = API_URL+COHORT_CODE;
 const $form = document.querySelector("form");
 const $main = document.querySelector("main");
+const $app = document.querySelector("#app");
 const $loading = document.querySelector("#loading-screen");
+
+//This is a test for connection//
+
 
 let teams = [];
 
@@ -19,7 +22,7 @@ function hideLoading() {
 async function fetchAllPlayers() {
   try {
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players`
+      `${full_url}/players`
     );
 
     const allPlayers = await response.json();
@@ -40,7 +43,7 @@ async function createPlayer(name, breed, imageUrl) {
     };
 
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players`,
+      `${full_url}/players`,
       {
         method: "POST",
         headers: {
@@ -53,7 +56,7 @@ async function createPlayer(name, breed, imageUrl) {
     const result = await response.json();
     console.log(player, result);
 
-    return result.data.player;
+    return result.data.player; //change from json
   } catch (err) {
     console.error("error");
   }
@@ -62,7 +65,7 @@ async function createPlayer(name, breed, imageUrl) {
 async function fetchPlayerById(id) {
   try {
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players/${id}`
+      `${full_url}/players/players/${id}`
     );
     const playerId = await response.json();
     console.log(playerId);
@@ -75,7 +78,7 @@ async function fetchPlayerById(id) {
 async function removePlayerById(id) {
   try {
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players/${id}`,
+      `${full_url}/players/players/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -94,7 +97,7 @@ async function removePlayerById(id) {
 async function fetchAllTeams() {
   try {
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/COHORT_CODE/teams`
+      `${full_url}/teams`
     );
     const fetchTeamId = await response.json();
     console.log(fetchTeamId);
@@ -105,11 +108,12 @@ async function fetchAllTeams() {
 }
 
 async function renderAllPlayers() {
-  const allPlayers = await fetchAllPlayers();
-  const playerList = allPlayers
+  const allPlayers = await fetchAllPlayers(); //change to allPlayers
+  // console.log(playerList);
+  const playerList = allPlayers.data.players; //add
   const $players = document.createElement("ul");
-  $players.id = "players";
-  playerList.foreach ((player) => {
+  $players.id = "player";
+  playerList.forEach((player) => {
     const $player = document.createElement("li");
     $player.className = "player-card";
     $player.innerHTML += `
@@ -121,9 +125,8 @@ async function renderAllPlayers() {
             <button class="remove-btn">Remove Player</button>
         </section>
         `;
-    
-    $detailsBtn = $player.querySelector(".details-btn");
-    $removeBtn = $player.querySelector(".remove-btn");
+    let $detailsBtn = $player.querySelector(".details-btn"); //
+    let $removeBtn = $player.querySelector(".remove-btn"); //
 
     $detailsBtn.addEventListener("click", async () => {
       showLoading();
@@ -158,7 +161,6 @@ async function renderAllPlayers() {
   $main.innerHTML = "";
   $main.appendChild($players);
 }
-
 async function renderSinglePlayer(id) {
   const player = await fetchPlayerById(id);
 
@@ -192,7 +194,7 @@ async function init() {
     await renderAllPlayers();
     teams = await fetchAllTeams();
   } catch (err) {
-    // console.error("error");
+    console.error("error");
   } finally {
     hideLoading();
   }
