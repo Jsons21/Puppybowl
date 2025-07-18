@@ -48,7 +48,7 @@ async function createPlayer(name, breed, imageUrl) {
     const result = await response.json();
     console.log(player, result);
 
-    return result.data.player; //change from json
+    return result.data.player;
   } catch (err) {
     console.error("error");
   }
@@ -56,7 +56,7 @@ async function createPlayer(name, breed, imageUrl) {
 
 async function fetchPlayerById(id) {
   try {
-    const response = await fetch(`${full_url}/players/players/${id}`);
+    const response = await fetch(`${full_url}/players/${id}`);
     const playerId = await response.json();
     console.log(playerId);
     return playerId.data;
@@ -67,7 +67,7 @@ async function fetchPlayerById(id) {
 
 async function removePlayerById(id) {
   try {
-    const response = await fetch(`${full_url}/players/players/${id}`, {
+    const response = await fetch(`${full_url}/players/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +94,6 @@ async function fetchAllTeams() {
 
 async function renderAllPlayers() {
   const allPlayers = await fetchAllPlayers();
-  // console.log(playerList);
   const playerList = allPlayers.data.players;
   const $players = document.createElement("ul");
   $players.id = "player";
@@ -110,8 +109,8 @@ async function renderAllPlayers() {
             <button class="remove-btn">Remove Player</button>
         </section>
         `;
-    $detailsBtn = $player.querySelector(".details-btn");
-    $removeBtn = $player.querySelector(".remove-btn");
+    const $detailsBtn = $player.querySelector(".details-btn");
+    const $removeBtn = $player.querySelector(".remove-btn");
 
     $detailsBtn.addEventListener("click", async () => {
       showLoading();
@@ -147,7 +146,8 @@ async function renderAllPlayers() {
   $main.appendChild($players);
 }
 async function renderSinglePlayer(id) {
-  const player = await fetchPlayerById(id);
+  const playerData = await fetchPlayerById(id);
+  const player = playerData.player;
 
   $main.innerHTML = `
     <section id="single-player">
@@ -162,7 +162,6 @@ async function renderSinglePlayer(id) {
 
   $main.querySelector("#back-btn").addEventListener("click", async () => {
     showLoading();
-    $app.appendChild($main);
     try {
       await renderAllPlayers();
     } catch (err) {
