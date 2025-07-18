@@ -26,7 +26,7 @@ async function fetchAllPlayers() {
 
     return allPlayers;
   } catch (err) {
-    console.error(err.message);
+    console.error("error");
   }
 }
 
@@ -54,7 +54,7 @@ async function createPlayer(name, breed, imageUrl) {
 
     return json.data.player;
   } catch (err) {
-    console.error(err.message);
+    console.error("error");
   }
 }
 
@@ -67,7 +67,7 @@ async function fetchPlayerById(id) {
     console.log(playerId);
     return playerId.data;
   } catch (err) {
-    console.error(err.message);
+    console.error("error");
   }
 }
 
@@ -86,7 +86,7 @@ async function removePlayerById(id) {
     console.log(result);
     return result;
   } catch (err) {
-    console.error(err.message);
+    console.error("error");
   }
 }
 
@@ -99,22 +99,18 @@ async function fetchAllTeams() {
     console.log(fetchTeamId);
     return fetchTeamId;
   } catch (err) {
-    console.error(err.message);
+    console.error("error");
   }
 }
 
 async function renderAllPlayers() {
-  try {
   const playerList = await fetchAllPlayers();
-  console.log(playerList);
-
+  // console.log(playerList);
   const $players = document.createElement("ul");
-  $players.id = "player-list";
-
+  $players.id = "player";
   playerList.forEach((player) => {
     const $player = document.createElement("li");
     $player.className = "player-card";
-
     $player.innerHTML += `
         <h2>${player.name}</h2>
         <p>${player.breed}</p>
@@ -124,16 +120,15 @@ async function renderAllPlayers() {
             <button class="remove-btn">Remove Player</button>
         </section>
         `;
-
-    const $detailsBtn = $player.querySelector(".details-btn");
-    const $removeBtn = $player.querySelector(".remove-btn");
+    $detailsBtn = $player.querySelector(".details-btn");
+    $removeBtn = $player.querySelector(".remove-btn");
 
     $detailsBtn.addEventListener("click", async () => {
       showLoading();
       try {
         await renderSinglePlayer(player.id);
       } catch (err) {
-        console.error(err.message);
+        console.error("error");
       } finally {
         hideLoading();
       }
@@ -145,12 +140,11 @@ async function renderAllPlayers() {
           `Are you sure you want to remove ${player.name} from the roster?`
         );
         if (!confirmRemove) return;
-
         showLoading();
         await removePlayerById(player.id);
         await renderAllPlayers();
       } catch (err) {
-        console.error(err.message);
+        console.error("error");
       } finally {
         hideLoading();
       }
@@ -162,7 +156,6 @@ async function renderAllPlayers() {
   $main.innerHTML = "";
   $main.appendChild($players);
 }
-
 async function renderSinglePlayer(id) {
   const player = await fetchPlayerById(id);
 
@@ -183,7 +176,7 @@ async function renderSinglePlayer(id) {
     try {
       await renderAllPlayers();
     } catch (err) {
-      // console.error(err.message);
+      console.error("error");
     } finally {
       hideLoading();
     }
@@ -196,7 +189,7 @@ async function init() {
     await renderAllPlayers();
     teams = await fetchAllTeams();
   } catch (err) {
-    console.error(err.message);
+    console.error("error");
   } finally {
     hideLoading();
   }
@@ -214,7 +207,7 @@ $form.addEventListener("submit", async (e) => {
     await createPlayer(name, breed, image);
     renderAllPlayers();
   } catch (err) {
-    console.error(err.message);
+    console.error("error");
   } finally {
     document.querySelector("#new-name").value = "";
     document.querySelector("#new-breed").value = "";
