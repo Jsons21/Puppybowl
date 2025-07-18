@@ -1,6 +1,7 @@
-const COHORT_CODE = "2505-ftb-ct-web-p";
+const COHORT_CODE = "2505-ftb-ct-web-pt";
 
-const API_URL = "https://fsa-puppy-bowl.herokuapp.com/api/2505-Jacob/players";
+const API_URL = "https://fsa-puppy-bowl.herokuapp.com/api/";
+const full_url = API_URL+COHORT_CODE;
 const $form = document.querySelector("form");
 const $main = document.querySelector("main");
 const $loading = document.querySelector("#loading-screen");
@@ -18,7 +19,7 @@ function hideLoading() {
 async function fetchAllPlayers() {
   try {
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-Jacob/players`
+      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players`
     );
 
     const allPlayers = await response.json();
@@ -39,7 +40,7 @@ async function createPlayer(name, breed, imageUrl) {
     };
 
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-Jacob/players`,
+      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players`,
       {
         method: "POST",
         headers: {
@@ -52,7 +53,7 @@ async function createPlayer(name, breed, imageUrl) {
     const result = await response.json();
     console.log(player, result);
 
-    return json.data.player;
+    return result.data.player;
   } catch (err) {
     console.error("error");
   }
@@ -61,7 +62,7 @@ async function createPlayer(name, breed, imageUrl) {
 async function fetchPlayerById(id) {
   try {
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-Jacob/players${id}`
+      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players/${id}`
     );
     const playerId = await response.json();
     console.log(playerId);
@@ -74,7 +75,7 @@ async function fetchPlayerById(id) {
 async function removePlayerById(id) {
   try {
     const response = await fetch(
-      `https://fsa-puppy-bowl.herokuapp.com/api/2505-Jacob/players${id}`,
+      `https://fsa-puppy-bowl.herokuapp.com/api/2505-ftb-ct-web-pt-Jacob/players/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -104,11 +105,11 @@ async function fetchAllTeams() {
 }
 
 async function renderAllPlayers() {
-  const playerList = await fetchAllPlayers();
-  // console.log(playerList);
+  const allPlayers = await fetchAllPlayers();
+  const playerList = allPlayers
   const $players = document.createElement("ul");
-  $players.id = "player";
-  playerList.forEach((player) => {
+  $players.id = "players";
+  playerList.foreach ((player) => {
     const $player = document.createElement("li");
     $player.className = "player-card";
     $player.innerHTML += `
@@ -120,6 +121,7 @@ async function renderAllPlayers() {
             <button class="remove-btn">Remove Player</button>
         </section>
         `;
+    
     $detailsBtn = $player.querySelector(".details-btn");
     $removeBtn = $player.querySelector(".remove-btn");
 
@@ -156,6 +158,7 @@ async function renderAllPlayers() {
   $main.innerHTML = "";
   $main.appendChild($players);
 }
+
 async function renderSinglePlayer(id) {
   const player = await fetchPlayerById(id);
 
@@ -189,7 +192,7 @@ async function init() {
     await renderAllPlayers();
     teams = await fetchAllTeams();
   } catch (err) {
-    console.error("error");
+    // console.error("error");
   } finally {
     hideLoading();
   }
